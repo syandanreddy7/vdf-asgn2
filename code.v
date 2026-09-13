@@ -1,11 +1,34 @@
+module FSM_Gray_Code(
+	
+
+	input [1:0] ip, 
+	input clk , rst, 
+	output reg [1:0] op
+	
+	);
+
+localparam S1 = 3'b000, S2 = 3'b001, S3 = 3'b011, S4 = 3'b010, S5 = 3'b110;
+reg [2:0] state, next_state;
+
+always @(posedge clk or posedge rst)
+	begin
+		if (rst)
+		begin 
+			state <= S1;
+		end 
+		else
+		begin
+			state <= next_state; 
+		end
+	end
 
 
 
 
 always @(*)
-	next_state = state; 
-	op = 2'b00;
 	begin 
+		next_state = state; 
+		op = 2'b00;
 		case (state)
 			S1: 
 				begin
@@ -139,3 +162,4 @@ always @(*)
 				end
 		endcase	
 	end 
+endmodule

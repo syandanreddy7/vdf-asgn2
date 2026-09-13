@@ -16,9 +16,9 @@ module FSM_Gray_Code_tb ();
 	initial 
 	begin 
 
-		$display("===================================");
-		$display("===========STATE COVERAGE==========");
-		$display("===================================");
+		// $display("===================================");
+		// $display("===========STATE COVERAGE==========");
+		// $display("===================================");
 		// intializaing some parameters
 		clk_tb = 1'b0;
 		rst_tb = 1'b1;
@@ -89,13 +89,80 @@ module FSM_Gray_Code_tb ();
 		// $display("===================================");
 
 
+		// testing all the S1 Transistions
 
+		navigate(3'b000);
+		check_transition(2'b00, 3'b000, 2'b01);
+
+		navigate(3'b000);
+		check_transition(2'b01, 3'b000, 2'b00);
+
+		navigate(3'b000);
 		check_transition(2'b10, 3'b001, 2'b01);
+
+		navigate(3'b000);
+		check_transition(2'b11, 3'b011, 2'b00);
+
+		// testing all the S2 transitions 
+
+		navigate(3'b001);
+		check_transition(2'b00, 3'b000, 2'b11);
+
+		navigate(3'b001);
 		check_transition(2'b01, 3'b011, 2'b11);
-		check_transition(2'b11, 3'b010, 2'b00);
+
+		navigate(3'b001);
+		check_transition(2'b10, 3'b001, 2'b10);
+
+		navigate(3'b001);
+		check_transition(2'b11, 3'b010, 2'b10);
+
+		//testing all the S3 
+
+		navigate(3'b011);
+		check_transition(2'b00, 3'b000, 2'b00);
+
+		navigate(3'b011);
 		check_transition(2'b01, 3'b110, 2'b01);
 
+		navigate(3'b011);
+		check_transition(2'b10, 3'b011, 2'b00);
+
+		navigate(3'b011);
+		check_transition(2'b11, 3'b010, 2'b00);
+
+		//testing all the S4
+		navigate(3'b010);
+		check_transition(2'b00, 3'b011, 2'b11);
+
+		navigate(3'b010);
+		check_transition(2'b01, 3'b110, 2'b01);
+
+		navigate(3'b010);
+		check_transition(2'b10, 3'b110, 2'b01);
+
+		navigate(3'b010);
+		check_transition(2'b11, 3'b010, 2'b11);
+
+		//testing all the s5 
+		navigate(3'b110);
+		check_transition(2'b00, 3'b110, 2'b00);
+
+		navigate(3'b110);
+		check_transition(2'b01, 3'b000, 2'b00);
+
+		navigate(3'b110);
+		check_transition(2'b10, 3'b000, 2'b10);
+
+		navigate(3'b110);
+		check_transition(2'b11, 3'b110, 2'b11);
+
+
+		$finish;
 	end
+
+	// to stop the clock not to go infinite cycles
+	
 
 
 task check_transition;
@@ -133,4 +200,118 @@ task check_transition;
 		end
 	end
 endtask 
+
+
+task navigate;
+    input [2:0] target_state;
+
+    begin
+
+        // First bring FSM back to S1
+        case(dut.state)
+
+            3'b000: 
+            begin
+                // no action need as already at S1
+            end
+
+            3'b001: 
+            begin
+                // S2 -> S1
+                ip_tb = 2'b00;
+                @(posedge clk_tb);
+                #3;
+            end
+
+            3'b011: 
+            begin
+                // S3 -> S1
+                ip_tb = 2'b00;
+                @(posedge clk_tb);
+                #3;
+            end
+
+            3'b010: 
+            begin
+                // S4 -> S3 -> S1
+                ip_tb = 2'b00;
+                @(posedge clk_tb);
+                #3;
+
+                ip_tb = 2'b00;
+                @(posedge clk_tb);
+                #3;
+            end
+
+            3'b110: begin
+                // S5 -> S1
+                ip_tb = 2'b01;
+                @(posedge clk_tb);
+                #3;
+            end
+
+            default: 
+            begin
+        		$display("ERROR: FSM is in an invalid state: %b", dut.state);
+    		end
+
+        endcase
+
+
+        // Now FSM is at S1.
+        // Navigate from S1 to target state.
+
+        case(target_state)
+
+            3'b000: begin
+                // S1
+            end
+
+            3'b001: begin
+                // S1 -> S2
+                ip_tb = 2'b10;
+                @(posedge clk_tb);
+                #3;
+            end
+
+            3'b011: begin
+                // S1 -> S3
+                ip_tb = 2'b11;
+                @(posedge clk_tb);
+                #3;
+            end
+
+            3'b010: begin
+                // S1 -> S3 -> S4
+                ip_tb = 2'b11;
+                @(posedge clk_tb);
+                #3;
+
+                ip_tb = 2'b11;
+                @(posedge clk_tb);
+                #3;
+            end
+
+            3'b110: begin
+                // S1 -> S3 -> S5
+                ip_tb = 2'b11;
+                @(posedge clk_tb);
+                #3;
+
+                ip_tb = 2'b01;
+                @(posedge clk_tb);
+                #3;
+            end
+
+            default: 
+            begin
+    			$display("ERROR: Invalid target state: %b", target_state);
+			end
+
+        endcase
+
+    end
+endtask
+
+
 endmodule

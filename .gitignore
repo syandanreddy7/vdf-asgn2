@@ -1,0 +1,8 @@
+.DS_Store
+compile_out
+*.vcd
+coverage.dat
+coverage_report/
+obj_dir/
+.surfer/
+lambdapdk/

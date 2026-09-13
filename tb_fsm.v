@@ -1,4 +1,5 @@
 // important point testbench has no ports
+`timescale 1ns/1ps
 
 module FSM_Gray_Code_tb ();
 

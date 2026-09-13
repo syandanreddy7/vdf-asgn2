@@ -7,7 +7,10 @@ module FSM_Gray_Code(
 	
 	);
 
+// enumerated the gray code into the const variable blocks 
 localparam S1 = 3'b000, S2 = 3'b001, S3 = 3'b011, S4 = 3'b010, S5 = 3'b110;
+
+//internal containers to hold/communicate the state and next_state
 reg [2:0] state, next_state;
 
 

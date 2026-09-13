@@ -16,6 +16,10 @@ module FSM_Gray_Code_tb ();
 	initial 
 	begin 
 
+		//below are the lines of code to get the vcd file for surfer
+		$dumpfile("fsm.vcd");
+		$dumpvars(0, FSM_Gray_Code_tb);
+
 		// $display("===================================");
 		// $display("===========STATE COVERAGE==========");
 		// $display("===================================");

@@ -1,13 +1,13 @@
 // important point testbench has no ports
 `timescale 1ns/1ps
 
-module FSM_Gray_Code_tb ();
+module FSM_One_Hot_tb ();
 
 	reg [1:0] ip_tb;
 	reg clk_tb, rst_tb;
 	wire [1:0] op_tb;
 
-	FSM_Gray_Code dut(.ip(ip_tb), .clk(clk_tb), .rst(rst_tb), .op(op_tb));
+	FSM_One_Hot dut(.ip(ip_tb), .clk(clk_tb), .rst(rst_tb), .op(op_tb));
 
 	always #5 clk_tb = ~clk_tb;
 
@@ -18,8 +18,8 @@ module FSM_Gray_Code_tb ();
 	begin 
 
 		//below are the lines of code to get the vcd file for surfer
-		$dumpfile("fsm.vcd");
-		$dumpvars(0, FSM_Gray_Code_tb);
+		$dumpfile("fsm_one_hot.vcd");
+		$dumpvars(0, FSM_One_Hot_tb);
 
 		// $display("===================================");
 		// $display("===========STATE COVERAGE==========");
@@ -29,14 +29,14 @@ module FSM_Gray_Code_tb ();
 		rst_tb = 1'b1;
 		ip_tb = 2'b00;
 		
-		// disabling the reset
+		//removing the reset / disabling the reset
 		#10 
 		rst_tb = 1'b0;
 		
 		// ip_tb = 2'b10;
 		// @(posedge clk_tb);
 		// #3;
-		// if (dut.state == 3'b001 && op_tb == 2'b01)
+		// if (dut.state == 5'b00010 && op_tb == 2'b01)
 		// 	begin
 		// 		$display("TEST 1: S1 + 10 -> S2 : PASS");
 		// 	end
@@ -49,7 +49,7 @@ module FSM_Gray_Code_tb ();
 		// ip_tb = 2'b01;
 		// @(posedge clk_tb);
 		// #3;
-		// if (dut.state == 3'b011 && op_tb == 2'b11)
+		// if (dut.state == 5'b00100 && op_tb == 2'b11)
 		// 	begin
 		// 		$display("TEST 2: S2 + 01 -> S3 : PASS");
 		// 	end
@@ -61,7 +61,7 @@ module FSM_Gray_Code_tb ();
 		// ip_tb = 2'b11;
 		// @(posedge clk_tb);
 		// #3;
-		// if (dut.state == 3'b010 && op_tb == 2'b00)
+		// if (dut.state == 5'b00001 && op_tb == 2'b00)
 		// 	begin
 		// 		$display("TEST 3: S3 + 11 -> S4 : PASS");
 		// 	end
@@ -73,7 +73,7 @@ module FSM_Gray_Code_tb ();
 		// ip_tb = 2'b01;
 		// @(posedge clk_tb);
 		// #3;
-		// if (dut.state == 3'b110 && op_tb == 2'b01)
+		// if (dut.state == 5'b01000 && op_tb == 2'b01)
 		// 	begin
 		// 		$display("TEST 4: S4 + 01 -> S5 : PASS");
 		// 	end
@@ -96,71 +96,71 @@ module FSM_Gray_Code_tb ();
 
 		// testing all the S1 Transistions
 
-		navigate(3'b000);
-		check_transition(2'b00, 3'b000, 2'b01);
+		navigate(5'b10000);
+		check_transition(2'b00, 5'b10000, 2'b01);
 
-		navigate(3'b000);
-		check_transition(2'b01, 3'b000, 2'b00);
+		navigate(5'b10000);
+		check_transition(2'b01, 5'b10000, 2'b00);
 
-		navigate(3'b000);
-		check_transition(2'b10, 3'b001, 2'b01);
+		navigate(5'b10000);
+		check_transition(2'b10, 5'b00010, 2'b01);
 
-		navigate(3'b000);
-		check_transition(2'b11, 3'b011, 2'b00);
+		navigate(5'b10000);
+		check_transition(2'b11, 5'b00100, 2'b00);
 
 		// testing all the S2 transitions 
 
-		navigate(3'b001);
-		check_transition(2'b00, 3'b000, 2'b11);
+		navigate(5'b00010);
+		check_transition(2'b00, 5'b10000, 2'b11);
 
-		navigate(3'b001);
-		check_transition(2'b01, 3'b011, 2'b11);
+		navigate(5'b00010);
+		check_transition(2'b01, 5'b00100, 2'b11);
 
-		navigate(3'b001);
-		check_transition(2'b10, 3'b001, 2'b10);
+		navigate(5'b00010);
+		check_transition(2'b10, 5'b00010, 2'b10);
 
-		navigate(3'b001);
-		check_transition(2'b11, 3'b010, 2'b10);
+		navigate(5'b00010);
+		check_transition(2'b11, 5'b00001, 2'b10);
 
 		//testing all the S3 
 
-		navigate(3'b011);
-		check_transition(2'b00, 3'b000, 2'b00);
+		navigate(5'b00100);
+		check_transition(2'b00, 5'b10000, 2'b00);
 
-		navigate(3'b011);
-		check_transition(2'b01, 3'b110, 2'b01);
+		navigate(5'b00100);
+		check_transition(2'b01, 5'b01000, 2'b01);
 
-		navigate(3'b011);
-		check_transition(2'b10, 3'b011, 2'b00);
+		navigate(5'b00100);
+		check_transition(2'b10, 5'b00100, 2'b00);
 
-		navigate(3'b011);
-		check_transition(2'b11, 3'b010, 2'b00);
+		navigate(5'b00100);
+		check_transition(2'b11, 5'b00001, 2'b00);
 
 		//testing all the S4
-		navigate(3'b010);
-		check_transition(2'b00, 3'b011, 2'b11);
+		navigate(5'b00001);
+		check_transition(2'b00, 5'b00100, 2'b11);
 
-		navigate(3'b010);
-		check_transition(2'b01, 3'b110, 2'b01);
+		navigate(5'b00001);
+		check_transition(2'b01, 5'b01000, 2'b01);
 
-		navigate(3'b010);
-		check_transition(2'b10, 3'b110, 2'b01);
+		navigate(5'b00001);
+		check_transition(2'b10, 5'b01000, 2'b01);
 
-		navigate(3'b010);
-		check_transition(2'b11, 3'b010, 2'b11);
+		navigate(5'b00001);
+		check_transition(2'b11, 5'b00001, 2'b11);
 
 		//testing all the s5 
-		navigate(3'b110);
-		check_transition(2'b00, 3'b110, 2'b00);
+		navigate(5'b01000);
+		check_transition(2'b00, 5'b01000, 2'b00);
 
-		navigate(3'b110);
-		check_transition(2'b01, 3'b000, 2'b00);
+		navigate(5'b01000);
+		check_transition(2'b01, 5'b10000, 2'b00);
 
-		navigate(3'b110);
-		check_transition(2'b10, 3'b000, 2'b10);
+		navigate(5'b01000);
+		check_transition(2'b10, 5'b10000, 2'b10);
 
-		navigate(3'b110);
-		check_transition(2'b11, 3'b110, 2'b11);
+		navigate(5'b01000);
+		check_transition(2'b11, 5'b01000, 2'b11);
 
 
 		$finish;
@@ -172,7 +172,7 @@ module FSM_Gray_Code_tb ();
 
 task check_transition;
 	input [1:0] test_ip;
-	input [2:0] expected_state;
+	input [4:0] expected_state;
 	input [1:0] expected_op;
 
 
@@ -208,19 +208,19 @@ endtask
 
 
 task navigate;
-    input [2:0] target_state;
+    input [4:0] target_state;
 
     begin
 
         // First bring FSM back to S1
         case(dut.state)
 
-            3'b000: 
+            5'b10000: 
             begin
                 // no action need as already at S1
             end
 
-            3'b001: 
+            5'b00010: 
             begin
                 // S2 -> S1
                 ip_tb = 2'b00;
@@ -228,7 +228,7 @@ task navigate;
                 #3;
             end
 
-            3'b011: 
+            5'b00100: 
             begin
                 // S3 -> S1
                 ip_tb = 2'b00;
@@ -236,7 +236,7 @@ task navigate;
                 #3;
             end
 
-            3'b010: 
+            5'b00001: 
             begin
                 // S4 -> S3 -> S1
                 ip_tb = 2'b00;
@@ -248,7 +248,7 @@ task navigate;
                 #3;
             end
 
-            3'b110: begin
+            5'b01000: begin
                 // S5 -> S1
                 ip_tb = 2'b01;
                 @(posedge clk_tb);
@@ -268,25 +268,25 @@ task navigate;
 
         case(target_state)
 
-            3'b000: begin
+            5'b10000: begin
                 // S1
             end
 
-            3'b001: begin
+            5'b00010: begin
                 // S1 -> S2
                 ip_tb = 2'b10;
                 @(posedge clk_tb);
                 #3;
             end
 
-            3'b011: begin
+            5'b00100: begin
                 // S1 -> S3
                 ip_tb = 2'b11;
                 @(posedge clk_tb);
                 #3;
             end
 
-            3'b010: begin
+            5'b00001: begin
                 // S1 -> S3 -> S4
                 ip_tb = 2'b11;
                 @(posedge clk_tb);
@@ -297,7 +297,7 @@ task navigate;
                 #3;
             end
 
-            3'b110: begin
+            5'b01000: begin
                 // S1 -> S3 -> S5
                 ip_tb = 2'b11;
                 @(posedge clk_tb);

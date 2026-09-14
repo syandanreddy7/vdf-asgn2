@@ -1,4 +1,4 @@
-module FSM_Gray_Code(
+module FSM_One_Hot(
 	
 
 	input [1:0] ip, 
@@ -7,11 +7,11 @@ module FSM_Gray_Code(
 	
 	);
 
-// enumerated the gray code into the const variable blocks 
-localparam S1 = 3'b000, S2 = 3'b001, S3 = 3'b011, S4 = 3'b010, S5 = 3'b110;
+// enumerated the one - hot code into the const variable blocks 
+localparam S1 = 5'b10000, S2 = 5'b00010, S3 = 5'b00100, S4 = 5'b00001, S5 = 5'b01000;
 
 //internal containers to hold/communicate the state and next_state
-reg [2:0] state, next_state;
+reg [4:0] state, next_state;
 
 
 //state register block of code
@@ -30,8 +30,7 @@ always @(posedge clk or posedge rst)
 
 
 
-// combinational part of the FSM which calculated the next
-// state based on the Current State and Inputs
+
 always @(*)
 	begin 
 		next_state = state; 
